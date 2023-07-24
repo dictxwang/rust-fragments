@@ -7,6 +7,7 @@ mod closure;
 mod biology_func;
 mod option_func;
 mod collect_use;
+mod clone_copy;
 
 use learning::prelude::circle::*;
 use learning::prelude::shape::*;
@@ -97,4 +98,7 @@ fn main() {
     // collection使用
     collect_use::use_map();
     collect_use::use_set();
+
+    // copy 与 clone
+    clone_copy::try_copy_param();
 }
