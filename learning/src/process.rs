@@ -71,3 +71,10 @@ pub fn process_match(val: i32, boolean: bool) {
         _ => println!("failure")
     }
 }
+
+#[test]
+fn test01() {
+    println!("this is test");
+    // 执行测试 cargo test -- --nocapture
+    // -- --nocapture 是指测试过程中显示println的内容
+}
