@@ -8,6 +8,7 @@ mod biology_func;
 mod option_func;
 mod collect_use;
 mod clone_copy;
+mod about_tokio;
 
 use learning::prelude::circle::*;
 use learning::prelude::shape::*;
@@ -101,4 +102,9 @@ fn main() {
 
     // copy 与 clone
     clone_copy::try_copy_param();
+
+    // tokio库的应用
+    about_tokio::tokio_first();
+    about_tokio::tokio_second();
+    about_tokio::tokio_third();
 }
