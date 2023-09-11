@@ -1,46 +1,56 @@
-use tokio::time;
+use anyhow::Result;
+use std::time;
+use std::thread;
 
-async fn f1() -> i32 {
-    time::sleep(time::Duration::from_secs(3)).await;
-    println!("this is f1");
-    return 3;
+// cargo run --bin about_tokio_task
+#[tokio::main]
+async fn main() -> Result<()> {
+
+    spawn_blocking();
+    spawn().await;
+    block_in_place();
+    Ok(())
 }
 
-async fn f2() -> i32 {
-    time::sleep(time::Duration::from_secs(5)).await;
-    println!("this is f2");
-    return 5;
+async fn spawn() {
+
+    println!("[function spawn]");
+    // 依据cpu核数并行
+    let mut handlers = vec![];
+    for i in 0..5 {
+        handlers.push(tokio::task::spawn(async move {
+            thread::sleep(time::Duration::from_secs(2));
+            
+            println!("spawn loop index is {}", i);
+        }));
+    }
+
+    for handler in handlers {
+        handler.await.unwrap();
+    }
 }
 
-fn test_join() {
+fn spawn_blocking() {
 
-    let rt = tokio::runtime::Runtime::new().unwrap();
-    let start = time::Instant::now();
-    rt.block_on(async {
-        tokio::join!(f1(), f2());
-    });
-    let end = time::Instant::now();
-    let cost = end.duration_since(start).as_millis();
-    println!("join!: cost time {}ms", cost);
+    println!("[function spawn_blocking]");
+    // 并行
+    for i in 0..5 {
+        tokio::task::spawn_blocking(move || {
+            thread::sleep(time::Duration::from_secs(1));
+            println!("spawn_blocking loop index is {}", i);
+        });
+    }
 }
 
-fn test_select() {
+fn block_in_place() {
 
-    let rt = tokio::runtime::Runtime::new().unwrap();
-    let start = time::Instant::now();
-    rt.block_on(async {
-        let res = tokio::select! {
-            v1 = f1() => v1,
-            v2 = f2() => v2,
-        };
-        println!("select! result: {}", res);
-    });
-    let end = time::Instant::now();
-    let cost = end.duration_since(start).as_millis();
-    println!("select!: cost time {}ms", cost);
-}
-
-fn main() {
-    test_join();
-    test_select();
+    println!("[function block_in_place]");
+    // 顺序执行
+    for i in 0..5 {
+        tokio::task::block_in_place(move || {
+            thread::sleep(time::Duration::from_secs(1));
+            println!("block_in_place loop index is {}", i);
+        });
+    }
+    // 这里不会阻塞后续的代码
 }

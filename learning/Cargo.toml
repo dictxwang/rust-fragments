@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 tokio = { version = "1", features = ["full"] }
+primitive-types = { version = "0.12.1" }
+revm = {version = "3.0.0", features = ["ethersdb", "serde", "std"]}

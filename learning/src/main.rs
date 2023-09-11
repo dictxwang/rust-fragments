@@ -9,6 +9,7 @@ mod option_func;
 mod collect_use;
 mod clone_copy;
 mod about_tokio;
+mod for_test;
 
 use learning::prelude::circle::*;
 use learning::prelude::shape::*;

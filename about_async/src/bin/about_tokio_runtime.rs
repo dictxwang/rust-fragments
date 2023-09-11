@@ -5,15 +5,17 @@ fn test01() {
     let rt = tokio::runtime::Runtime::new().unwrap();
     rt.spawn(async {
         thread::sleep(time::Duration::from_secs(3));
+        // tokio::time::sleep(time::Duration::from_secs(5)).await;
         println!("spawn 01");
     });
     
     rt.spawn(async {
         thread::sleep(time::Duration::from_secs(3));
+        // tokio::time::sleep(time::Duration::from_secs(5)).await;
         println!("spawn 02");
     });
 
-    thread::sleep(time::Duration::from_secs(4));
+    thread::sleep(time::Duration::from_secs(6));
 }
 
 fn test02() {
@@ -62,11 +64,32 @@ fn test03() {
         thread::sleep(time::Duration::from_secs(1));
         println!("[2] rt2: spawn");
     });
+    
     thread::sleep(time::Duration::from_secs(6));
+}
+
+async fn sleep_println(duration: u64) {
+    tokio::time::sleep(tokio::time::Duration::from_secs(duration)).await;
+    println!("sleep and println");
+}
+
+fn test04() {
+
+    let rt = tokio::runtime::Runtime::new().unwrap();
+    rt.spawn({
+        sleep_println(3)
+    });
+    
+    rt.spawn({
+        sleep_println(4)
+    });
+
+    thread::sleep(time::Duration::from_secs(5));
 }
 
 fn main() {
     test01();
     test02();
     test03();
+    test04();
 }
