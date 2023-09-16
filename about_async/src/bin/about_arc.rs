@@ -1,7 +1,7 @@
 use std::thread;
 use std::time;
 use std::sync::Arc;
-use rand::Rng;
+use rand;
 
 fn main() {
     // Arc引用的内容不能改变

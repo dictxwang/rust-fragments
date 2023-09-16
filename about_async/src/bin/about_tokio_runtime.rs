@@ -1,6 +1,6 @@
 use std::{thread, time};
 
-fn test01() {
+fn spawn() {
 
     let rt = tokio::runtime::Runtime::new().unwrap();
     rt.spawn(async {
@@ -18,7 +18,7 @@ fn test01() {
     thread::sleep(time::Duration::from_secs(6));
 }
 
-fn test02() {
+fn spawn_blocking() {
 
     let rt1 = tokio::runtime::Runtime::new().unwrap();
     let rt2 = tokio::runtime::Runtime::new().unwrap();
@@ -42,7 +42,7 @@ fn test02() {
     thread::sleep(time::Duration::from_secs(6));
 }
 
-fn test03() {
+fn block_on() {
 
     let rt1 = tokio::runtime::Runtime::new().unwrap();
     let rt2 = tokio::runtime::Runtime::new().unwrap();
@@ -64,7 +64,7 @@ fn test03() {
         thread::sleep(time::Duration::from_secs(1));
         println!("[2] rt2: spawn");
     });
-    
+
     thread::sleep(time::Duration::from_secs(6));
 }
 
@@ -73,7 +73,7 @@ async fn sleep_println(duration: u64) {
     println!("sleep and println");
 }
 
-fn test04() {
+fn spawn_outer() {
 
     let rt = tokio::runtime::Runtime::new().unwrap();
     rt.spawn({
@@ -87,9 +87,39 @@ fn test04() {
     thread::sleep(time::Duration::from_secs(5));
 }
 
+fn spawn_many() {
+
+    let rt = tokio::runtime::Runtime::new().unwrap();
+    for i in 1..10 {
+        // 选择cpu核数相同的任务并行
+        rt.spawn(async move {
+            thread::sleep(time::Duration::from_secs(1));
+            println!("spawn_many index:{}", i);
+        });
+    }
+}
+
+fn spawn_blocking_many() {
+
+    let rt = tokio::runtime::Runtime::new().unwrap();
+    for i in 1..10 {
+        rt.spawn_blocking(move || {
+            thread::sleep(time::Duration::from_secs(2));
+            println!("spawn_blocking_many index:{}", i);
+        });
+    }
+
+    thread::sleep(time::Duration::from_secs(2));
+    rt.spawn_blocking(|| {
+        println!("last task");
+    });
+}
+
 fn main() {
-    test01();
-    test02();
-    test03();
-    test04();
+    // spawn();
+    // spawn_blocking();
+    // block_on();
+    // spawn_outer();
+    // spawn_many();
+    spawn_blocking_many();
 }
