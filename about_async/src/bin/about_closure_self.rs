@@ -53,6 +53,7 @@ fn main () {
     let mut animal = Animal::new(String::from("cow"), 1);
     animal.grow();
     animal.add_info(String::from("weight"), String::from("10KG"));
+    println!("info weight={}", animal.info.get("weight").unwrap());
 
     animal.print();
 
