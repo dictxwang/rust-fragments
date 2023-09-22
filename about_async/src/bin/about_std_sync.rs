@@ -49,6 +49,7 @@ fn use_condvar() {
     let mut started = locker.lock().unwrap();
     if !*started {
         // 当started没有置为true时，会一直阻塞在这里
+        println!("wait at cvar.wait");
         started = cvar.wait(started).unwrap();
     }
 
@@ -118,7 +119,7 @@ fn use_refcell() {
 fn main() {
 
     // use_barrier();
-    // use_condvar();
+    use_condvar();
     // use_callonce();
-    use_refcell();
+    // use_refcell();
 }
