@@ -1,4 +1,4 @@
-use std::{str::FromStr, ops::{Mul, Div}};
+use std::{str::FromStr, ops::{Mul, Div}, collections::HashMap};
 
 use primitive_types::U256;
 use revm::primitives::{U256 as rU256, B160};
@@ -44,4 +44,96 @@ fn test05() {
     let u1 = U256::from(123456789);
     let u2 = u1.mul(U256::from(75)).div(U256::from(100));
     println!("u2:{:?}", u2);
+}
+
+#[test]
+fn test06() {
+    let u1 = U256::from(10);
+    let u2 = U256::from(9);
+    let u3 = U256::from(10);
+    let u4 = U256::from(11);
+    println!("{:?}", u1.checked_sub(u2));  // Some(1)
+    println!("{:?}", u1.checked_sub(u3));  // Some(0)
+    println!("{:?}", u1.checked_sub(u4));  // None
+    println!("{:?}", u1.checked_sub(u4).unwrap_or_default());  // 0
+
+    println!("u1 == u3 is {:?}", u1 == u3);  // true
+    println!("u1 eq u3 is {:?}", u1.eq(&u3));  // true
+}
+
+#[test]
+fn test07() {
+
+    let mut hm: HashMap<U256, String> = HashMap::new();
+    hm.insert(U256::from(1), String::from("1"));
+    hm.insert(U256::from(2), String::from("2"));
+    hm.insert(U256::from(3), String::from("3"));
+    hm.insert(U256::from(4), String::from("4"));
+
+    let values: Vec<String> = hm.iter().filter(|(k,_)| **k > U256::from(2)).map(|(_, v)| v).cloned().collect();
+    for v in values {
+        println!("value {:?}", v);
+    }
+}
+
+#[derive(Debug)]
+struct SortItem {
+    pub value: i32,
+    pub name: String
+}
+
+#[test]
+fn test08() {
+    let mut vals = vec![];
+    vals.push(10);
+    vals.push(2);
+    vals.push(4);
+    vals.push(1);
+    vals.sort();
+    println!("{:?}", vals);  // [1, 2, 4, 10]
+
+    let mut items = vec![];
+    items.push(SortItem {value:10, name:String::from("n10")});
+    items.push(SortItem {value:4, name:String::from("n4")});
+    items.push(SortItem {value:1, name:String::from("n1")});
+    items.push(SortItem {value:2, name:String::from("n2")});
+    items.push(SortItem {value:1, name:String::from("n11")});
+
+    // items.sort_by_key(|a| a.value);  // sort_by_key
+    // items.sort_by(|a, b| 
+    //     {if a.value < b.value {std::cmp::Ordering::Less} 
+    //         else if a.value == b.value {std::cmp::Ordering::Equal} 
+    //         else {std::cmp::Ordering::Greater}
+    //     }
+    // );  // or sort_by
+    // for item in items {
+    //     println!("{:?}", item);
+    // }
+
+    items.dedup_by_key(|a| a.value);
+    for item in items {
+        println!("{:?}", item);
+    }
+
+    // let names: Vec<String> = items.into_iter().map(|i|i.name).collect();
+    // let joined = names.join(",");
+    // println!("joined:{:?}", names.join("|"));
+
+    // let uid = uuid::Uuid::new_v4();
+    // let uid_str = format!("{:?}", uid);
+    // println!("{}", uid_str);
+
+    let mut nitems: Vec<SortItem> = vec![];
+    nitems.push(SortItem { value: 1, name: String::from("a") });
+    nitems.push(SortItem { value: 2, name: String::from("b") });
+    nitems.push(SortItem { value: 3, name: String::from("a") });
+
+}
+
+#[test]
+fn test09() {
+
+    let mut map: HashMap<String, i32> = HashMap::new();
+    let val: &i32 = map.get(&String::from("abc")).unwrap_or(&10);
+    println!("value={:?}", val);
 }
