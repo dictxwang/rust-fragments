@@ -93,13 +93,14 @@ fn test08() {
     println!("{:?}", vals);  // [1, 2, 4, 10]
 
     let mut items = vec![];
+    items.push(SortItem {value:2, name:String::from("o2")});
     items.push(SortItem {value:10, name:String::from("n10")});
     items.push(SortItem {value:4, name:String::from("n4")});
     items.push(SortItem {value:1, name:String::from("n1")});
     items.push(SortItem {value:2, name:String::from("n2")});
     items.push(SortItem {value:1, name:String::from("n11")});
 
-    // items.sort_by_key(|a| a.value);  // sort_by_key
+    items.sort_by_key(|a| a.value);  // sort_by_key
     // items.sort_by(|a, b| 
     //     {if a.value < b.value {std::cmp::Ordering::Less} 
     //         else if a.value == b.value {std::cmp::Ordering::Equal} 
@@ -136,4 +137,68 @@ fn test09() {
     let mut map: HashMap<String, i32> = HashMap::new();
     let val: &i32 = map.get(&String::from("abc")).unwrap_or(&10);
     println!("value={:?}", val);
+    println!("map is empty {:?}", map.is_empty());
+    map.insert(String::from("xyz"), 12);
+    println!("map is empty {:?}", map.is_empty());
+}
+
+// cargo test --release -- --nocapture -- --test test10
+#[test]
+fn test10() {
+
+    let e = 1e18 as u32;
+    println!("e is {:?}", e);
+    let v = U256::from(e).checked_mul(U256::from(1)).unwrap();
+    println!("v is {:?}", v);
+    let u = U256::from(e);
+    println!("u is {:?}", u);
+}
+
+// cargo test --release -- --nocapture -- --test test11
+#[test]
+fn test11() {
+    //  frontrun_in 10973935802469135802467 weth_increase 1305063130332981971
+    let rate = U256::from(10973935802469135802467u128).mul(U256::from(1e18 as u128)).div(U256::from(1305063130332981971u128));
+    println!("rate: {:?}", rate);
+
+}
+
+// cargo test --release -- --nocapture -- --test test12
+#[test]
+fn test12() {
+    let value = U256::from(100_000_000u128).checked_mul(U256::from(1e18 as u128)).unwrap_or_default();
+    println!("value: {:?}", value);
+}
+
+// cargo test --release -- --nocapture -- --test test13
+#[test]
+fn test13() {
+    let v = U256::from(1);
+    let r = v.checked_sub(U256::from(2));
+    println!("r is {:?}", r.ok_or_else(|| {
+        println!("not ok");
+    }));
+
+    println!("xx is {:?}", v.checked_sub(U256::from(3)).unwrap_or_default());
+}
+
+enum Type {
+    X,
+    Y,
+    Z,
+}
+
+// cargo test --release -- --nocapture -- --test test14
+#[test]
+fn test14() {
+
+    let t1 = Type::Y;
+    match t1 {
+        Type::X => {
+            println!("---abc");
+        },
+        Type::Y | Type::Z => {
+            println!("123");
+        },
+    }
 }
