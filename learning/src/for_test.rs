@@ -1,7 +1,7 @@
 use std::{str::FromStr, ops::{Mul, Div}, collections::HashMap};
 
 use primitive_types::U256;
-use revm::primitives::{U256 as rU256, B160};
+use revm::primitives::{U256 as rU256};
 
 #[test]
 fn test01() {
@@ -25,18 +25,12 @@ fn test02() {
 
 #[test]
 fn test03() {
-    let b1 = B160::from_str("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2").unwrap();
-    let b2 = B160::from_str("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2").unwrap();
-    assert_eq!(b1, b2);
 }
 
 #[test]
 fn test04() {
     let u1 = rU256::from_str("0xedceff30864d0c59113a29113472807abd04c523799e1d9f56afb2bb1e3410d1").unwrap();
     println!("u1:{:?}", u1);
-
-    let u2 = U256::from(u1);
-    println!("u2:{:?}", u2);
 }
 
 #[test]

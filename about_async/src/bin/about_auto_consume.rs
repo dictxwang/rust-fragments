@@ -103,21 +103,21 @@ async fn main() -> Result<()> {
 #[tokio::main]
 async fn xmain() -> Result<()> {
 
-    println!("call async_new by lazy_static!...");
-    lazy_static! {
-        static ref CONSUMER: AsyncOnce<Consumer> = AsyncOnce::new(async {
-            let consumer = Consumer::async_new().await.unwrap();
-            consumer
-        });
-    }
+    // println!("call async_new by lazy_static!...");
+    // lazy_static! {
+    //     static ref CONSUMER: AsyncOnce<Consumer> = AsyncOnce::new(async {
+    //         let consumer = Consumer::async_new().await.unwrap();
+    //         consumer
+    //     });
+    // }
 
-    CONSUMER.get().await.start_auto_consume(4).await;
+    // CONSUMER.get().await.start_auto_consume(4).await;
 
-    let mut rand = rand::thread_rng();
-    for i in 0..100 {
-        thread::sleep(time::Duration::from_millis(rand.gen_range(100, 1000)));
-        CONSUMER.get().await.push_message(format!("{}-{}", String::from("message-"), i)).await;
-    }
+    // let mut rand = rand::thread_rng();
+    // for i in 0..100 {
+    //     thread::sleep(time::Duration::from_millis(rand.gen_range(100, 1000)));
+    //     CONSUMER.get().await.push_message(format!("{}-{}", String::from("message-"), i)).await;
+    // }
 
     Ok(())
 }
