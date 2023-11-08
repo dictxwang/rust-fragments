@@ -10,12 +10,14 @@ fn handle_stream(mut stream: TcpStream) {
         Ok(size) => {
             let msg_byte = &data[0..size];
             let message = String::from_utf8(msg_byte.to_vec()).unwrap();
-            println!("Server read message {:?}", message);
             if message == "" || message == "Close" {
                 stream.shutdown(Shutdown::Write).unwrap();
                 false
             } else {
-                stream.write(msg_byte).unwrap();
+                env::set_var("k1", message.clone());
+                println!("Server reset value of k1 {:?}\n", message);
+                let replay_txt = "Success".as_bytes();
+                stream.write(replay_txt).unwrap();
                 true
             }
         },
@@ -32,6 +34,8 @@ fn start_server(address: String) {
     let listener = TcpListener::bind(address.clone()).unwrap();
     println!("Server listen at address {:?}", address.clone());
     for stream in listener.incoming() {
+        let k1 = env::var("k1").unwrap();
+        println!("Variable k1 current value is {:?}", k1);
         match stream {
             Ok(stream) => {
                 println!("Get new connection {:?}", stream.peer_addr().unwrap());
@@ -47,17 +51,17 @@ fn start_server(address: String) {
     drop(listener);
 }
 
-fn start_client(address: String) {
+fn start_client(address: String, message: String) {
 
     match TcpStream::connect(address.clone()) {
         Ok(mut stream) => {
             println!("Successfully connect {:?}", address.clone());
 
-            let msg = b"Hello";
+            let msg = message.as_bytes();
             stream.write(msg).unwrap();
             println!("Waiting for relay");
 
-            let mut data = [0 as u8; 5];
+            let mut data = [0 as u8; 7];
             match stream.read_exact(&mut data) {
                 Ok(_) => {
                     let text_byte = &data;
@@ -86,11 +90,18 @@ fn main() {
     if args.len() > 2 {
         address = args[2].clone();
     }
+    
+    let mut message = String::from("hello");
+    if args.len() > 3 {
+        message = args[3].clone();
+    }
+
+    env::set_var("k1", "Init Value");
 
     if part_type.to_lowercase() == "server" {
         start_server(address);
     } else if part_type.to_lowercase() == "client" {
-        start_client(address);
+        start_client(address, message);
     } else {
         println!("Invalid part of server or client")
     }
