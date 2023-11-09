@@ -1,7 +1,11 @@
+use std::collections::HashMap;
 use std::net::{TcpListener, TcpStream, Shutdown};
 use std::io::{Read, Write};
 use std::env;
 use std::thread;
+use once_cell::sync::Lazy;
+use once_cell::sync::OnceCell;
+use std::sync::Mutex;
 
 fn handle_stream(mut stream: TcpStream) {
 
@@ -14,6 +18,11 @@ fn handle_stream(mut stream: TcpStream) {
                 stream.shutdown(Shutdown::Write).unwrap();
                 false
             } else {
+                unsafe {
+                    let mut locker = EXT_CONSTANT.get().unwrap().lock().unwrap();
+                    locker.insert(String::from("ck1"), message.clone());
+                    println!("Server reset value of Ext Constant is {:?}", message);
+                }
                 env::set_var("k1", message.clone());
                 println!("Server reset value of k1 {:?}\n", message);
                 let replay_txt = "Success".as_bytes();
@@ -36,6 +45,11 @@ fn start_server(address: String) {
     for stream in listener.incoming() {
         let k1 = env::var("k1").unwrap();
         println!("Variable k1 current value is {:?}", k1);
+
+        unsafe {
+            let locker = EXT_CONSTANT.get().unwrap().lock().unwrap();
+            println!("Ext Constant current value is {:?}", locker.get("ck1").unwrap());
+        }
         match stream {
             Ok(stream) => {
                 println!("Get new connection {:?}", stream.peer_addr().unwrap());
@@ -79,6 +93,8 @@ fn start_client(address: String, message: String) {
     }
 }
 
+pub static mut EXT_CONSTANT: OnceCell<Mutex<HashMap<String, String>>> = OnceCell::new();
+
 // cargo run --bin about_std_tcp server 127.0.0.1:12345
 // cargo run --bin about_std_tcp client 127.0.0.1:12345
 fn main() {
@@ -97,6 +113,12 @@ fn main() {
     }
 
     env::set_var("k1", "Init Value");
+    
+    let mut values: HashMap<String, String> = HashMap::new();
+    values.insert(String::from("ck1"), String::from("Origin OnceCell Value"));
+    unsafe {
+        let _ = EXT_CONSTANT.set(Mutex::new(values));
+    }
 
     if part_type.to_lowercase() == "server" {
         start_server(address);
