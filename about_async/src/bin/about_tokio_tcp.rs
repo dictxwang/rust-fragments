@@ -100,7 +100,7 @@ async fn handle_stream(mut stream: TcpStream, pair_addr: SocketAddr) -> Result<(
             msg: Some("OK".to_string()),
             data: Some(receive_text.clone()),
         };
-        let echo = serde_json::to_string(&resp).unwrap();
+        let echo = serde_json::to_string_pretty(&resp).unwrap();
         
         // let echo = echo.replace("\"", "'");
         let data = make_data_package(echo).await;
