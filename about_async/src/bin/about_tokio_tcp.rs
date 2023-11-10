@@ -142,10 +142,10 @@ async fn start_server(addr: String) {
 async fn start_client(addr: String) -> Result<()> {
 
     let mut stream = TcpStream::connect(addr).await.unwrap();
-    println!("Welcome to Sando OP-Board");
+    println!("Welcome to OP-Board");
     loop {
         // Wait
-        print!("[sando-op]> ");
+        print!("[op-board]> ");
         io::stdout().flush()?;
 
         // Send
