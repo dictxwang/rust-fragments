@@ -8,6 +8,14 @@ use once_cell::sync::OnceCell;
 
 fn handle_stream(mut stream: TcpStream) {
 
+    // let ival = 123i32;
+    // let ival_bytes = ival.to_be_bytes();  // bytes length is 4
+    // let sval_bytes = "12345".as_bytes();  // bytes length is 5
+    // let mut total_bytes: Vec<u8> = vec![];
+    // total_bytes.extend(ival_bytes);
+    // total_bytes.extend(sval_bytes.clone());
+    // println!("total_bytes lenght is {:?}", total_bytes.len());  // length is 9
+
     let mut data = [0 as u8; 64];
     while match stream.read(&mut data) {
         Ok(size) => {
