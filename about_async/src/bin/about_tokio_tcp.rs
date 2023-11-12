@@ -9,7 +9,7 @@ use std::io;
 
 // Write the Docopt usage string.
 const USAGE: &'static str = "
-Rust's package manager
+Op-Board with tokio-net
 
 Usage:
     cargo <command> [<args>...]
@@ -115,7 +115,8 @@ async fn handle_stream(mut stream: TcpStream, pair_addr: SocketAddr) -> Result<(
 
 async fn start_server(addr: String) {
 
-    let listener = TcpListener::bind(addr).await.unwrap();
+    let listener = TcpListener::bind(addr.clone()).await.unwrap();
+    println!("Startup server, listen at {}", addr);
 
     loop {
         let (stream, pair_addr) = match listener.accept().await {
@@ -164,6 +165,7 @@ async fn start_client(addr: String) -> Result<()> {
 
         if should_close {
             stream.shutdown().await?;
+            println!("Exit!");
             break;
         }
 

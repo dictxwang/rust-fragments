@@ -196,3 +196,30 @@ fn test14() {
         },
     }
 }
+
+#[test]
+fn test15() {
+    
+    let mut s1 = String::new();
+    s1.insert_str(0, "123");
+    let mut s2 = String::new();
+    s2.insert_str(0, "123");
+    let eq = s1.eq(&s2);
+    println!("s1 equals s2 is {:?}", eq);  // true
+    let eq = s1 == s2;
+    println!("s1 equals s2 is {:?}", eq);  // true
+
+    let s3 = "123";
+    let s4 = "123";
+    let eq = s3.eq(s4);
+    println!("s3 equals s4 is {:?}", eq);  // true
+    let eq = s3 == s4;
+    println!("s3 equals s4 is {:?}", eq);  // true
+
+    let s5 = String::from("123");
+    let s6 = String::from("123");
+    let eq = s5.eq(&s6);
+    println!("s5 equals s6 is {:?}", eq);  // true
+    let eq = s5 == s6;
+    println!("s5 equals s6 is {:?}", eq);  // true
+}
