@@ -10,3 +10,10 @@ tokio = { version = "1", features = ["full"] }
 primitive-types = { version = "0.12.1" }
 revm = {version = "3.0.0", features = ["ethersdb", "serde", "std"]}
 uuid = {version = "1.4.1", features = ["v4"]}
+rand_core = "0.6.4"
+ed25519 = "2.2.0"
+ed25519-dalek = {version = "2.0.0", features = ["rand_core", "digest", "pkcs8"]}
+pkcs8 = "0.10.2"
+base64 = "0.21.5"
+rsa = {version = "0.9.4", features = ["sha2"]}
+rand = "0.8.5"

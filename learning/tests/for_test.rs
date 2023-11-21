@@ -197,6 +197,7 @@ fn test14() {
     }
 }
 
+// cargo test --release -- --nocapture -- --test test15
 #[test]
 fn test15() {
     
@@ -222,4 +223,25 @@ fn test15() {
     println!("s5 equals s6 is {:?}", eq);  // true
     let eq = s5 == s6;
     println!("s5 equals s6 is {:?}", eq);  // true
+}
+
+
+// cargo test --release -- --nocapture -- --test test16
+#[test]
+fn test16() {
+
+    // revenue=16427034431455232 fgas=135713 bgas=101151 bfee=49473784859 mfee=99839830222 profit=0~4708475854613056 no_dust=1
+
+    let fgas = U256::from(178111 as u64);
+    let bgas = U256::from(124172 as u64);
+    let bfee = U256::from(18409669273 as u128);
+    let revenue = U256::from(5633655116398592 as u128);
+    let dust = U256::from(386100000000000u128);
+    let no_dust = 2u64;
+
+    let revenue_minus = revenue.checked_sub(fgas * bfee).unwrap_or_default();
+    let bribe = revenue_minus + dust * no_dust;
+    let max_fee = bribe / bgas;
+    println!("{:?}", max_fee);
+
 }

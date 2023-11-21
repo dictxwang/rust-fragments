@@ -66,6 +66,7 @@ fn use_callonce() {
         handlers.push(thread::spawn(move || {
             let mut rand = rand::thread_rng();
             thread::sleep(time::Duration::from_secs(rand.gen_range(1, 3)));
+            
             println!("this is {i}, set VAL={i}");
             INIT.call_once(|| {
                 unsafe {
