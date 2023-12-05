@@ -114,9 +114,10 @@ fn test08() {
     // let joined = names.join(",");
     // println!("joined:{:?}", names.join("|"));
 
-    // let uid = uuid::Uuid::new_v4();
-    // let uid_str = format!("{:?}", uid);
-    // println!("{}", uid_str);
+    println!("Uuid: {}", format!("{:?}", uuid::Uuid::new_v4()));
+    println!("Uuid: {}", format!("{:?}", uuid::Uuid::new_v4()));
+    println!("Uuid: {}", format!("{:?}", uuid::Uuid::new_v4()));
+    println!("Uuid: {}", format!("{:?}", uuid::Uuid::new_v4()));
 
     let mut nitems: Vec<SortItem> = vec![];
     nitems.push(SortItem { value: 1, name: String::from("a") });
@@ -244,4 +245,54 @@ fn test16() {
     let max_fee = bribe / bgas;
     println!("{:?}", max_fee);
 
+}
+
+// cargo test --release -- --nocapture -- --test test17
+#[test]
+fn test17() {
+
+    let a = 1f64;
+    let b = 3f64;
+    println!("{}", a/b);
+
+
+    let vs = vec![1.2f64, 2.8f64, -0.3f64];
+    let sum_of_vec = |vs: Vec<f64>| {
+        vs.into_iter().reduce(|t, c| t+c).unwrap()
+    };
+    // let sum = vs.into_iter().reduce(|t,c| t+c).unwrap();
+    println!("sum is {:?}", sum_of_vec(vs.clone()));
+    println!("{:?}", vs);
+
+    let x = 0.0f64;
+    let y = 12.34f64;
+    println!("x*y={:?}", x * y == 0.0f64);
+
+    let z: f64 = 1.2345678;
+    let p1 = 10i32.pow(3);
+    println!("{}", z * p1 as f64);
+    println!("{}", (z * p1 as f64) as i32);
+    println!("z is {}", ((z * p1 as f64) as i32) as f64 / p1 as f64);
+}
+
+
+// cargo test --release -- --nocapture -- --test test18
+#[test]
+fn test18() {
+
+    let quote_asset_amount = 2f64;
+    let symbol_price = 0.02183f64;
+    let step_size = 1.0f64;
+    let quote_precision = 8u32;
+
+    let lot = quote_asset_amount / symbol_price;
+    let lot = (lot / step_size) as i32;
+    let lot = lot as f64 * step_size;
+
+    println!(">>> lot:{:?}", lot);
+    
+    let pow = 10i64.pow(quote_precision);  // 用i64防止溢出
+    let final_lot = ((lot * pow as f64) as i64) as f64 / pow as f64;
+
+    println!(">>> final_lot:{:?}", final_lot);
 }
