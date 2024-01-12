@@ -14,7 +14,7 @@ async fn main() -> Result<()> {
     let sender_clone = sender.clone();
     rt.spawn(async move {
         for _ in 0..1 {
-            // tokio::time::sleep(Duration::from_secs(1)).await;
+            tokio::time::sleep(Duration::from_secs(1)).await;
             // 如果没有任何reveiver，send会发生异常
             let ts = Local::now().timestamp_micros();
             sender_clone.send(ts).unwrap();
