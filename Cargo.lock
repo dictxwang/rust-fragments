@@ -13,6 +13,7 @@ dependencies = [
  "dotenv",
  "env_logger",
  "fern",
+ "flume",
  "futures",
  "lazy_static",
  "log",
@@ -508,9 +509,9 @@ dependencies = [
 
 [[package]]
 name = "data-encoding"
-version = "2.4.0"
+version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c2e66c9d817f1720209181c316d28635c050fa304f9c79e47a520882661b7308"
+checksum = "7e962a19be5cfc3f3bf6dd8f61eb50107f356ad6270fbb3ed41476571db78be5"
 
 [[package]]
 name = "der"
@@ -879,6 +880,17 @@ dependencies = [
  "rand 0.8.5",
  "rustc-hex",
  "static_assertions",
+]
+
+[[package]]
+name = "flume"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "55ac459de2512911e4b674ce33cf20befaba382d05b62b008afc1c8b57cbf181"
+dependencies = [
+ "futures-core",
+ "futures-sink",
+ "spin 0.9.8",
 ]
 
 [[package]]
@@ -1430,6 +1442,8 @@ name = "learning"
 version = "0.1.0"
 dependencies = [
  "base64 0.21.5",
+ "chrono",
+ "data-encoding",
  "ed25519",
  "ed25519-dalek",
  "pkcs8",
@@ -1438,6 +1452,7 @@ dependencies = [
  "rand_core 0.6.4",
  "revm",
  "rsa",
+ "sha2",
  "tokio",
  "uuid",
 ]
@@ -2724,6 +2739,9 @@ name = "spin"
 version = "0.9.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6980e8d7511241f8acf4aebddbb1ff938df5eebe98691418c4468d0b72a96a67"
+dependencies = [
+ "lock_api",
+]
 
 [[package]]
 name = "spki"

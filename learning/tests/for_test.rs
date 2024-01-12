@@ -76,6 +76,42 @@ struct SortItem {
     pub name: String
 }
 
+#[derive(Debug)]
+struct SortItemFloat {
+    pub value: f64,
+    pub name: String
+}
+
+// cargo test --release -- --nocapture -- --test test82
+#[test]
+fn test82() {
+    let mut items = vec![];
+    items.push(SortItemFloat{
+        value: 1.2,
+        name: "a".to_string(),
+    });
+    items.push(SortItemFloat{
+        value: 2.2,
+        name: "b".to_string(),
+    });
+    items.push(SortItemFloat{
+        value: 1.5,
+        name: "c".to_string(),
+    });
+
+    items.sort_by(|a, b| {
+        if a.value < b.value {
+            std::cmp::Ordering::Greater
+        } else if a.value == b.value {
+            std::cmp::Ordering::Equal
+        } else {
+            std::cmp::Ordering::Less
+        }
+    });
+
+    println!("items: {:?}", items);
+}
+
 #[test]
 fn test08() {
     let mut vals = vec![];
@@ -116,8 +152,8 @@ fn test08() {
 
     println!("Uuid: {}", format!("{:?}", uuid::Uuid::new_v4()));
     println!("Uuid: {}", format!("{:?}", uuid::Uuid::new_v4()));
-    println!("Uuid: {}", format!("{:?}", uuid::Uuid::new_v4()));
-    println!("Uuid: {}", format!("{:?}", uuid::Uuid::new_v4()));
+    println!("Uuid: {}", format!("{}", uuid::Uuid::new_v4()));
+    println!("Uuid: {}", format!("{}", uuid::Uuid::new_v4()));
 
     let mut nitems: Vec<SortItem> = vec![];
     nitems.push(SortItem { value: 1, name: String::from("a") });
@@ -295,4 +331,21 @@ fn test18() {
     let final_lot = ((lot * pow as f64) as i64) as f64 / pow as f64;
 
     println!(">>> final_lot:{:?}", final_lot);
+}
+
+// cargo test --release -- --nocapture -- --test test19
+#[test]
+fn test19() {
+
+    let ss = vec!["123".to_string(), "456".to_string(), "789".to_string()];
+    let slice = &ss[1..3];
+    println!("{:?}", slice);
+
+    let mut map: HashMap<String, i64> = HashMap::new();
+    map.insert("xyz".to_string(), 123);
+    let value = map.get("xyz").unwrap();
+    let value_2 = value * 2;
+    let value_3 = *value * 2;
+    println!("{:?},{:?}", value_2, value_3);
+
 }

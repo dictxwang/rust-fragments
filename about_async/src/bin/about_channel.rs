@@ -2,6 +2,8 @@ use std::sync::mpsc;
 use std::time;
 use std::thread;
 
+use chrono::Local;
+
 fn single_sender_and_single_reveiver() {
     let (tx, rx) = mpsc::channel();
     thread::spawn(move || {
@@ -52,9 +54,68 @@ fn sync_channel() {
     println!("[4] reveive: {}", rx.recv().unwrap());
 }
 
+fn channel_delay() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        for _ in 0..100 {
+            // thread::sleep(time::Duration::from_secs(1));
+            let ts = Local::now().timestamp_micros();
+            tx.send(ts).unwrap();
+        }
+    });
+
+    thread::spawn(move || {
+        loop {
+            let ts = rx.recv().unwrap();
+            let now = Local::now().timestamp_micros();
+            let duration = now - ts;
+            println!("Receive: {:?}, duration {:?} micros", ts, duration);
+        }
+    });
+}
+
+fn sync_channel_delay() {
+    let (tx, rx) = mpsc::sync_channel(0);
+
+    let tx_clone = tx.clone();
+    thread::spawn(move || {
+        for _ in 0..10 {
+            // thread::sleep(time::Duration::from_secs(1));
+            let ts = Local::now().timestamp_micros();
+            tx_clone.send(ts).unwrap();
+        }
+    });
+
+    let tx_clone = tx.clone();
+    thread::spawn(move || {
+        for _ in 0..10 {
+            // thread::sleep(time::Duration::from_secs(1));
+            let ts = Local::now().timestamp_micros();
+            tx_clone.send(ts).unwrap();
+        }
+    });
+
+    thread::spawn(move || {
+        loop {
+            let ts = rx.recv().unwrap();
+            let now = Local::now().timestamp_micros();
+            let duration = now - ts;
+            println!("Receive: {:?}, duration {:?} micros", ts, duration);
+        }
+    });
+}
+
+// cargo run --bin about_channel
 fn main() {
 
-    single_sender_and_single_reveiver();
-    single_sender_and_single_reveiver_for();
-    sync_channel();
+    // single_sender_and_single_reveiver();
+    // single_sender_and_single_reveiver_for();
+    // sync_channel();
+    sync_channel_delay();
+    // channel_delay();
+
+    loop {
+
+    }
 }

@@ -105,36 +105,45 @@ async fn spawn_many_another() {
     rt.shutdown_background();
 }
 
-fn spawn_blocking_many() {
+async fn start_many() {
 
-    let rt = tokio::runtime::Runtime::new().unwrap();
-    for i in 1..10 {
-        rt.spawn_blocking(move || {
-            thread::sleep(time::Duration::from_secs(1));
-            println!("spawn_blocking_many index:{}", i);
-        });
-    }
-    // 上面for循环中的10个任务会同时阻塞1秒
+    let rt = tokio::runtime::Builder::new_multi_thread().enable_all().worker_threads(2).build().unwrap();
 
-    thread::sleep(time::Duration::from_secs(2));
-
-    // sleep2秒后，继续执行last task
-    rt.spawn_blocking(|| {
-        println!("last task");
+    // 如果使用tokio的sleep，worker_threads将不会限制rt.spawn并行的数量，比如设置worker_threads为2，实际上下面三个spawn都能并行
+    // 但是如果使用thread::sleep，这个限制将会有效
+    rt.spawn(async {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_millis(1000)).await;
+            // thread::sleep(time::Duration::from_millis(1000));
+            println!("123");
+        }
+    });
+    rt.spawn(async {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_millis(2000)).await;
+            // thread::sleep(time::Duration::from_millis(2000));
+            println!("456");
+        }
+    });
+    rt.spawn(async {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_millis(3000)).await;
+            println!("789");
+        }
     });
 
-    rt.shutdown_background();
+    tokio::time::sleep(time::Duration::from_secs(1000)).await;
 }
 
 // cargo run --bin about_tokio_runtime
-#[tokio::main]
+#[tokio::main(flavor = "multi_thread", worker_threads = 10)]
 async fn main() -> Result<()> {
     // spawn();
     // spawn_blocking();
     // spawn_outer();
     // spawn_many();
-    spawn_many_another().await;
-    // spawn_blocking_many();
+    // spawn_many_another().await;
+    start_many().await;
 
     println!("all functions finished.");
     Ok(())

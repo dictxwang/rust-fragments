@@ -59,7 +59,9 @@ fn use_vec() {
     }
 
     let final_value = vec.lock().unwrap()[0];
+    let length = vec.lock().unwrap().len();
     println!("vec value at index 0 is {final_value}");
+    println!("vec length is {length}");
 }
 
 // cargo run --bin about_arc_mutex
