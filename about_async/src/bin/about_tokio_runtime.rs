@@ -135,15 +135,52 @@ async fn start_many() {
     tokio::time::sleep(time::Duration::from_secs(1000)).await;
 }
 
+async fn use_tokio_spawn() {
+
+    tokio::spawn(async {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            println!("[1] running");
+        }
+    });
+    tokio::spawn(async {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            println!("[2] running");
+        }
+    });
+    tokio::spawn(async {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            println!("[3] running");
+        }
+    });
+    tokio::spawn(async {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            println!("[4] running");
+        }
+    });
+    tokio::spawn(async {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            println!("[5] running");
+        }
+    });
+
+    tokio::time::sleep(time::Duration::from_secs(1000)).await;
+}
+
 // cargo run --bin about_tokio_runtime
-#[tokio::main(flavor = "multi_thread", worker_threads = 10)]
+#[tokio::main(flavor = "multi_thread", worker_threads = 4)]
 async fn main() -> Result<()> {
     // spawn();
     // spawn_blocking();
     // spawn_outer();
     // spawn_many();
     // spawn_many_another().await;
-    start_many().await;
+    // start_many().await;
+    use_tokio_spawn().await;
 
     println!("all functions finished.");
     Ok(())

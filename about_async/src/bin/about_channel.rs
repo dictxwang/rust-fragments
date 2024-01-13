@@ -80,8 +80,8 @@ fn sync_channel_delay() {
 
     let tx_clone = tx.clone();
     thread::spawn(move || {
-        for _ in 0..10 {
-            // thread::sleep(time::Duration::from_secs(1));
+        for _ in 0..5 {
+            thread::sleep(time::Duration::from_secs(1));
             let ts = Local::now().timestamp_micros();
             tx_clone.send(ts).unwrap();
         }
@@ -89,8 +89,8 @@ fn sync_channel_delay() {
 
     let tx_clone = tx.clone();
     thread::spawn(move || {
-        for _ in 0..10 {
-            // thread::sleep(time::Duration::from_secs(1));
+        for _ in 0..5 {
+            thread::sleep(time::Duration::from_millis(1500));
             let ts = Local::now().timestamp_micros();
             tx_clone.send(ts).unwrap();
         }
