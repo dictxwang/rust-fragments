@@ -1,4 +1,4 @@
-use std::{str::FromStr, ops::{Mul, Div}, collections::HashMap};
+use std::{str::FromStr, ops::{Mul, Div}, collections::HashMap, sync::atomic::AtomicI64};
 
 use primitive_types::U256;
 use revm::primitives::{U256 as rU256};
@@ -348,4 +348,13 @@ fn test19() {
     let value_3 = *value * 2;
     println!("{:?},{:?}", value_2, value_3);
 
+}
+
+// cargo test --release -- --nocapture -- --test test20
+#[test]
+fn test20() {
+
+    let count = AtomicI64::new(0);
+    let fetch = count.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+    println!("Atomic value {}", fetch);
 }

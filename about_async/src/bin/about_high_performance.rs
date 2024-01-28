@@ -1,7 +1,12 @@
 use std::{collections::HashMap, sync::{Mutex, Arc}};
 
+use std::thread;
+use std::time;
+use once_cell::sync::Lazy;
+use rand::Rng;
 use anyhow::Result;
 use chrono::Local;
+use tokio::runtime;
 
 fn map() {
     let mut map = HashMap::new();
@@ -73,15 +78,52 @@ fn time() {
     }
 }
 
+pub fn process(index: i64) {
+
+    // let mut reg = rand::thread_rng();
+    thread::sleep(std::time::Duration::from_micros(20));
+    // println!("process: {}", index);
+
+}
+
+pub async fn async_process(index: i64) {
+
+    // let mut reg = rand::thread_rng();
+    tokio::time::sleep(std::time::Duration::from_micros(20)).await;
+    // println!("async process: {}", index);
+
+}
+
+static RT_EXECUTOR: Lazy<runtime::Runtime> = Lazy::new(|| 
+    runtime::Builder::new_multi_thread().worker_threads(4).enable_all().build().unwrap()
+);
+
+pub async fn speed() {
+
+    let rt = runtime::Runtime::new().unwrap();
+
+    rt.spawn(async {
+        let mut index = 0i64;
+        loop {
+            process(index);
+            // RT_EXECUTOR.spawn(async_process(index));
+            println!("process: {}", index);
+            index += 1;
+        }
+    });
+
+    tokio::time::sleep(std::time::Duration::from_secs(15)).await;
+} 
+
 // cargo run --bin about_high_performance
 #[tokio::main]
 pub async fn main() -> Result<()> {
 
     // mutex_map().await;
-    time();
+    // time();
+    speed().await;
 
     loop {
         
     }
-    Ok(())
 }

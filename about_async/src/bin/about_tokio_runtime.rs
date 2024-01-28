@@ -139,32 +139,65 @@ async fn use_tokio_spawn() {
 
     tokio::spawn(async {
         loop {
-            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            // 如果不sleep，超过work_threads的线程将不会运行
+            tokio::time::sleep(std::time::Duration::from_micros(1)).await;
             println!("[1] running");
         }
     });
     tokio::spawn(async {
         loop {
-            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            tokio::time::sleep(std::time::Duration::from_micros(1)).await;
             println!("[2] running");
         }
     });
     tokio::spawn(async {
         loop {
-            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            tokio::time::sleep(std::time::Duration::from_micros(1)).await;
             println!("[3] running");
         }
     });
     tokio::spawn(async {
         loop {
-            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            tokio::time::sleep(std::time::Duration::from_micros(1)).await;
             println!("[4] running");
         }
     });
     tokio::spawn(async {
         loop {
-            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            tokio::time::sleep(std::time::Duration::from_micros(1)).await;
             println!("[5] running");
+        }
+    });
+
+    let rt = tokio::runtime::Runtime::new().unwrap();
+    rt.spawn(async {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_micros(1)).await;
+            println!("[6] running");
+        }
+    });
+    rt.spawn(async {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_micros(1)).await;
+            println!("[7] running");
+        }
+    });
+    rt.spawn(async {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_micros(1)).await;
+            println!("[8] running");
+        }
+    });
+    rt.spawn(async {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_micros(1)).await;
+            println!("[9] running");
+        }
+    });
+    rt.spawn(async {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_micros(1)).await;
+            println!("[10] running");
         }
     });
 
@@ -172,7 +205,7 @@ async fn use_tokio_spawn() {
 }
 
 // cargo run --bin about_tokio_runtime
-#[tokio::main(flavor = "multi_thread", worker_threads = 4)]
+#[tokio::main(flavor = "multi_thread", worker_threads = 3)]
 async fn main() -> Result<()> {
     // spawn();
     // spawn_blocking();
